@@ -232,7 +232,7 @@
           <div class="content has-text-justified">
              <h3 class="title is-5">MVRefer Benchmark</h3>
              <p>
-               To standardize evaluation, we built <b>MVRefer</b> based on ScanNet and ScanRefer. It emulates embodied agents by sampling \(N=8\) sparse frames. We provide metrics that decouple grounding accuracy from reconstruction quality, including <b>mIoU<sub>global</sub></b> (3D) and <b>mIoU<sub>view</sub></b> (2D projection).
+               To standardize evaluation, we built <b>MVRefer</b> based on ScanNet and ScanRefer. It emulates embodied agents by sampling N=8 sparse frames. We provide metrics that decouple grounding accuracy from reconstruction quality, including <b>mIoU<sub>global</sub></b> (3D) and <b>mIoU<sub>view</sub></b> (2D projection).
              </p>
           </div>
           <br>
@@ -303,12 +303,17 @@
                           style="width: 90%; height: 90%; background: #ffffff; margin: 0 auto;">
             </model-viewer>
           </div>
+          <div class="content has-text-centered">
+            <p id="qualitative-text" style="font-size: 1.2rem; font-weight: bold;">
+              the cabinet is in the northwest corner of the room. the cabinet is a white rectangular box.
+            </p>
+          </div>
           <br>
           <div class="content has-text-centered">
             <div class="thumbnail-container" id="thumbnail-qualitative">
-              <video src="resources/scene0251_00.mp4" data-glb="resources/0251-true.glb" loop playsinline muted></video>
-              <video src="resources/scene0277_00.mp4" data-glb="resources/0277-true.glb" loop playsinline muted></video>
-              <video src="resources/scene0356_00.mp4" data-glb="resources/0356-true.glb" loop playsinline muted></video>
+              <video src="resources/scene0251_00.mp4" data-glb="resources/0251-true.glb" data-text="the cabinet is in the northwest corner of the room. the cabinet is a white rectangular box." loop playsinline muted></video>
+              <video src="resources/scene0277_00.mp4" data-glb="resources/0277-true.glb" data-text="it is a radiator underneath a window. the radiator is to the right of the bed." loop playsinline muted></video>
+              <video src="resources/scene0356_00.mp4" data-glb="resources/0356-true.glb" data-text="a small document organizer with shelves. there is a door entry near it." loop playsinline muted></video>
             </div>  
           </div>  
           <style>
@@ -387,17 +392,32 @@
                 if (firstThumbnail.tagName.toLowerCase() === 'video') {
                   firstThumbnail.play();
                 }
+                // Update the text description
+                const text = firstThumbnail.getAttribute('data-text');
+                if (text) {
+                  const textContainer = document.getElementById('qualitative-text');
+                  if (textContainer) {
+                    textContainer.innerText = text;
+                  }
+                }
               }
               
               document.querySelectorAll('#thumbnail-qualitative img, #thumbnail-qualitative video').forEach(el => {
                 // Rest of your click handler code remains the same
                 el.addEventListener('click', () => {
                   const glbSrc = el.getAttribute('data-glb');
+                  const text = el.getAttribute('data-text');
+                  
                   const modelViewer = document.getElementById('QualitativeResult');
                   modelViewer.setAttribute('src', glbSrc);
                   modelViewer.cameraOrbit = "180deg 70deg auto";
                   modelViewer.resetTurntableRotation(0);
                   modelViewer.jumpCameraToGoal();
+                  
+                  const textContainer = document.getElementById('qualitative-text');
+                  if (textContainer && text) {
+                    textContainer.innerText = text;
+                  }
 
                   // Remove selection class from all elements
                   document.querySelectorAll('#thumbnail-qualitative img, #thumbnail-qualitative video').forEach(element => {
@@ -471,12 +491,17 @@
               </model-viewer>
             </div>
           </div>
+          <div class="content has-text-centered">
+            <p id="comparison-text" style="font-size: 1.2rem; font-weight: bold;">
+              the fridge is tall, rectangular, and white. it is located to the right of the stove.
+            </p>
+          </div>
           <div class="hero-body" style="padding: 0;">
             <div class="content has-text-centered">
               <div class="thumbnail-container", id="thumbnail-comparison", data-selected-name="scene0651_00">                
-                <video src="resources/scene0651_00.mp4" name="scene0651_00" loop playsinline muted></video>
-                <video src="resources/scene0187_00.mp4" name="scene0187_00" loop playsinline muted></video>
-                <video src="resources/scene0153_00.mp4" name="scene0153_00" loop playsinline muted></video>
+                <video src="resources/scene0651_00.mp4" name="scene0651_00" data-text="the fridge is tall, rectangular, and white. it is located to the right of the stove." loop playsinline muted></video>
+                <video src="resources/scene0187_00.mp4" name="scene0187_00" data-text="the coffee table is just to the left of center of the back wall of the room. the coffee table is directly in front of a chair with circular black workspace arm and to the right of a red seat." loop playsinline muted></video>
+                <video src="resources/scene0153_00.mp4" name="scene0153_00" data-text="the hanging shower curtain. the curtain hangs in the tub." loop playsinline muted></video>
               </div>  
             </div>  
           </div>
@@ -545,11 +570,25 @@
         if (firstComparisonThumbnail.tagName.toLowerCase() === 'video') {
           firstComparisonThumbnail.play();
         }
+        // Update the text description
+        const text = firstComparisonThumbnail.getAttribute('data-text');
+        if (text) {
+          const textContainer = document.getElementById('comparison-text');
+          if (textContainer) {
+            textContainer.innerText = text;
+          }
+        }
       }
       
       document.querySelectorAll('#thumbnail-comparison img, #thumbnail-comparison video').forEach(el => {
         el.addEventListener('click', () => {
           const name = el.getAttribute('name');
+          const text = el.getAttribute('data-text');
+
+          const textContainer = document.getElementById('comparison-text');
+          if (textContainer && text) {
+            textContainer.innerText = text;
+          }
           
           // Update model viewers with the corresponding GLB files
           const modelViewer1 = document.getElementById('modelViewerComparison1');
